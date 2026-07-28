@@ -17,5 +17,10 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
 
+    # Database
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/ecolatino"
+
+
+
 
 settings = Settings()

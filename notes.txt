@@ -2,3 +2,7 @@ Entity responsibilities
 
 
 EntityResponsibilitySourceA publisher or feed, such as Reuters, AP, CNN, or a local newspaperSourcePolicyConfiguration for crawling, rate limiting, robots rules, and content extractionArticleOne specific publication from one sourceStoryA normalized event or topic grouping multiple articlesStoryArticleLinks articles to stories and records why/how they are relatedCrawlJobTracks ingestion attempts, execution status, errors, and metrics
+
+
+
+uv run alembic init --template async alembic
