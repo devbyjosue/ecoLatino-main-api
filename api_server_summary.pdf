@@ -1,0 +1,510 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 6 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /Resources 5 0 R /MediaBox [0 0 595 842] /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 4187 >>
+stream
+0.102 0.212 0.365 rg
+0 720 595 122 re
+f
+1.000 1.000 1.000 rg
+BT
+/F1B 24 Tf
+50 785 Td
+(EcoLatino News API) Tj
+ET
+0.192 0.592 0.584 rg
+BT
+/F1B 12 Tf
+50 760 Td
+(System Status Report & PostgreSQL Migration Roadmap) Tj
+ET
+0.800 0.800 0.800 rg
+BT
+/F1 9 Tf
+50 740 Td
+(Date: July 29, 2026  |  Author: Antigravity AI  |  Version: 1.0.0) Tj
+ET
+0.102 0.212 0.365 rg
+BT
+/F1B 14 Tf
+50 680 Td
+(1. Executive Summary) Tj
+ET
+0.102 0.212 0.365 RG
+1.5 w
+50 675 m
+545 675 l
+S
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 655 Td
+(This report outlines the current architectural status of the EcoLatino Main API server and) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 641 Td
+(details a comprehensive roadmap for migrating the persistence layer to PostgreSQL. The) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 627 Td
+(system is built using FastAPI and SQLAlchemy \(async\). Currently, a split exists between an) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 613 Td
+(unused, in-memory SQLite database module \(app/db/database.py\) and a configured but) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 599 Td
+(unmigrated PostgreSQL setup \(app/core/database.py\). Moving forward, we will implement) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 585 Td
+(Alembic migrations to establish a production-ready PostgreSQL relational schema and) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 571 Td
+(standardize the repository patterns.) Tj
+ET
+0.102 0.212 0.365 rg
+BT
+/F1B 14 Tf
+50 542 Td
+(2. Current API Server & Codebase Status) Tj
+ET
+0.102 0.212 0.365 RG
+1.5 w
+50 537 m
+545 537 l
+S
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 519 Td
+(The API layer is highly structured with standard asynchronous layers. The status is) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 505 Td
+(summarized below:) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 481 Td
+(- Tech Stack: FastAPI \(v0.140.6\) running on Python 3.14.3. SQLAlchemy \(v2.0.51\) used) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 468 Td
+(for ORM models.) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 452 Td
+(- Core Models: Base, TimeStampedModel, Source, SourcePolicy, Article, Story,) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 439 Td
+(StoryArticle, and CrawlJob.) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 423 Td
+(- API Routers \(/api/v1\): Endpoints configured for Articles, Sources, Stories, Crawl) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 410 Td
+(Jobs, and Analytics.) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 394 Td
+(- DB Discrepancy: app/db/database.py uses sqlite+aiosqlite:///. app/core/database.py) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 381 Td
+(uses postgresql+asyncpg://.) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 365 Td
+(- Dependency Injection: Services \(e.g. ArticleService\) use dependencies.py which) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 352 Td
+(pulls session from app/core/database.py.) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 336 Td
+(- Alembic: Initialized commands are noted in notes.txt but no migrations or config) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 323 Td
+(exist in the workspace.) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+60 307 Td
+(- Containerization: docker-compose.yml is defined but currently empty.) Tj
+ET
+0.102 0.212 0.365 rg
+BT
+/F1B 14 Tf
+50 276 Td
+(3. PostgreSQL Database Roadmap) Tj
+ET
+0.102 0.212 0.365 RG
+1.5 w
+50 271 m
+545 271 l
+S
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 253 Td
+(To set up the Postgres database, we will execute a series of steps to containerize the) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 239 Td
+(database instance, configure the Alembic database migration tool, generate the schema) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 10 Tf
+50 225 Td
+(migration scripts based on our declarative SQLAlchemy models, and run the initial migration.) Tj
+ET
+0.929 0.949 0.969 rg
+50 146 495 60 re
+f
+0.102 0.212 0.365 rg
+BT
+/F1B 9.5 Tf
+60 189 Td
+(Database Connection Configuration \(app/core/config.py\):) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 173 Td
+(DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/ecolatino) Tj
+ET
+0.300 0.300 0.300 rg
+BT
+/F1 9 Tf
+60 159 Td
+(Note: Connection is configured for asynchronous operations using the asyncpg driver.) Tj
+ET
+0.500 0.500 0.500 rg
+BT
+/F1 9 Tf
+270 30 Td
+(Page 1 of 2) Tj
+ET
+
+endstream
+endobj
+5 0 obj
+<< /Font << /F1 9 0 R /F1B 10 0 R >> >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /Resources 8 0 R /MediaBox [0 0 595 842] /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 3819 >>
+stream
+0.192 0.592 0.584 rg
+0 750 595 92 re
+f
+1.000 1.000 1.000 rg
+BT
+/F1B 18 Tf
+50 795 Td
+(EcoLatino News API - Postgres Database Setup) Tj
+ET
+0.900 0.900 0.900 rg
+BT
+/F1 11 Tf
+50 775 Td
+(Step-by-Step Implementation Roadmap) Tj
+ET
+0.102 0.212 0.365 rg
+BT
+/F1B 13 Tf
+50 710 Td
+(4. Detailed Database Setup & Migration Steps) Tj
+ET
+0.102 0.212 0.365 RG
+1.5 w
+50 705 m
+545 705 l
+S
+0.192 0.592 0.584 rg
+BT
+/F1B 10 Tf
+50 685 Td
+(Step 1: Containerize PostgreSQL with Docker Compose) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 672 Td
+(Populate docker-compose.yml with a postgres:17 service mapping port 5432 to the host,) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 660 Td
+(declaring POSTGRES_USER, POSTGRES_PASSWORD, and POSTGRES_DB as 'ecolatino'.) Tj
+ET
+0.192 0.592 0.584 rg
+BT
+/F1B 10 Tf
+50 640 Td
+(Step 2: Environment File Setup) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 627 Td
+(Create a .env file in the root workspace containing settings \(e.g. DATABASE_URL\) to) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 615 Td
+(override the default Pydantic-settings. This keeps credentials out of source control.) Tj
+ET
+0.192 0.592 0.584 rg
+BT
+/F1B 10 Tf
+50 595 Td
+(Step 3: Initialize Alembic) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 582 Td
+(Run: uv run alembic init --template async alembic) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 570 Td
+(This creates the required Alembic environment for asynchronous migrations.) Tj
+ET
+0.192 0.592 0.584 rg
+BT
+/F1B 10 Tf
+50 550 Td
+(Step 4: Configure Alembic to Load SQLAlchemy Models) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 537 Td
+(Edit alembic/env.py to import 'Base' from 'app.models' and set target_metadata =) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 525 Td
+(Base.metadata. Retrieve the active connection string from settings.DATABASE_URL) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 513 Td
+(instead of hardcoding it.) Tj
+ET
+0.192 0.592 0.584 rg
+BT
+/F1B 10 Tf
+50 493 Td
+(Step 5: Generate Initial Autogenerated Migration) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 480 Td
+(Run: uv run alembic revision --autogenerate -m "Initial schema") Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 468 Td
+(This compares current models against the database state and generates Python) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 456 Td
+(migration scripts.) Tj
+ET
+0.192 0.592 0.584 rg
+BT
+/F1B 10 Tf
+50 436 Td
+(Step 6: Execute Migrations) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 423 Td
+(Run: uv run alembic upgrade head) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 411 Td
+(Applies the migrations to create tables for Source, SourcePolicy, Article, Story, and) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9 Tf
+60 399 Td
+(CrawlJob.) Tj
+ET
+0.102 0.212 0.365 rg
+BT
+/F1B 13 Tf
+50 369 Td
+(5. Immediate Next Action Items) Tj
+ET
+0.102 0.212 0.365 RG
+1.5 w
+50 364 m
+545 364 l
+S
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+50 346 Td
+(1. Write the docker-compose.yml definition for a local PostgreSQL database server.) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+50 329 Td
+(2. Create the root .env file and define) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+50 316 Td
+(DATABASE_URL='postgresql+asyncpg://postgres:postgres@localhost:5432/ecolatino'.) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+50 299 Td
+(3. Remove C:\\Users\\v81137\\Documents\\EcoLatino-Main-API\\app\\db\\database.py to resolve the) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+50 286 Td
+(code duplication.) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+50 269 Td
+(4. Initialize Alembic, update target_metadata in env.py, and generate the initial) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+50 256 Td
+(migrations.) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+50 239 Td
+(5. Start the Docker container, run migrations, and execute 'uv run uvicorn app.main:app) Tj
+ET
+0.176 0.216 0.282 rg
+BT
+/F1 9.5 Tf
+50 226 Td
+(--reload' to verify.) Tj
+ET
+0.500 0.500 0.500 rg
+BT
+/F1 9 Tf
+270 30 Td
+(Page 2 of 2) Tj
+ET
+
+endstream
+endobj
+8 0 obj
+<< /Font << /F1 9 0 R /F1B 10 0 R >> >>
+endobj
+9 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+10 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000127 00000 n 
+0000000231 00000 n 
+0000004470 00000 n 
+0000004525 00000 n 
+0000004629 00000 n 
+0000008500 00000 n 
+0000008555 00000 n 
+0000008625 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+8701
+%%EOF
