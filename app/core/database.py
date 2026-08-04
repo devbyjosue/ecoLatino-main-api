@@ -8,19 +8,24 @@ from sqlalchemy.ext.asyncio import (
 from app.core.config import settings
 
 # Create asynchronous engine
+connect_args = {}
+if "neon.tech" in settings.DATABASE_URL:
+    connect_args["ssl"] = True
+
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=settings.DEBUG,
-    future=True,
+    echo=True,
+    pool_pre_ping=True,
+    connect_args={
+        "timeout": 30,
+        "command_timeout": 60
+    },
 )
 
-# Asynchronous session factory
-SessionLocal = async_sessionmaker(
+AsyncSessionLocal = async_sessionmaker(
     bind=engine,
     class_=AsyncSession,
     expire_on_commit=False,
-    autocommit=False,
-    autoflush=False,
 )
 
 
@@ -28,7 +33,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Dependency generator for obtaining an asynchronous database session.
     """
-    async with SessionLocal() as session:
+    async with AsyncSessionLocal() as session:
         try:
             yield session
         finally:

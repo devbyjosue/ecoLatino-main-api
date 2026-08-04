@@ -10,7 +10,7 @@ class Base(DeclarativeBase):
 
 
 engine = create_async_engine(
-    "sqlite+aiosqlite:///",
+    "postgresql+psycopg://",
     echo=True,
     pool_size=5,
     max_overflow=10,
@@ -31,7 +31,6 @@ AsyncSessionFactory: async_sessionmaker[AsyncSession] = async_sessionmaker(
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionFactory() as session:
         yield session
-        await session.commit()
     await session.close()
 
 
